@@ -1,6 +1,6 @@
 /*
  * File:        ColResize.js
- * Version:     0.5
+ * Version:     0.5.1
  * CVS:         $Id$
  * Description: Column resizing in DataTables
  * Author:      Koos van der Kolk, based on work of Allan Jardine (www.sprymedia.co.uk)
@@ -321,7 +321,6 @@
       /* store width of last column */
       that.nLastTh = $(nTh).parent().children('th:last');
       that.nLastThOriginalWidth = that.nLastTh.width();
-      console.log(that.nLastThOriginalWidth);
 
       /* store some variables */
       this.s.mouse.startX = e.pageX;
@@ -347,8 +346,10 @@
         } );
 
         /* set the column width in the table */
-        that._fnSetColumnWith(nTh);
-        that._fnSetColumnWith(that.nLastTh);
+        that._fnSetColumnWidth(nTh);
+        if (nTh.index()!== that.nLastTh.index()) {
+          that._fnSetColumnWidth(that.nLastTh);
+        }
 
         /* prevent bubbling etc */
         that._fnMouseUp.call( that, e );
@@ -369,7 +370,7 @@
 
 
     },
-    "_fnSetColumnWith" : function(nTh){
+    "_fnSetColumnWidth" : function(nTh){
       var oTable = this.oTable;
       var aoColumns = this.s.dt.aoColumns;
       var iColumnIndex = $(nTh).index();
@@ -403,7 +404,7 @@
         $(nTh).width(this.s.mouse.startWidth + moveLength);
 
         /* also resize the last column header if the column width is decreased */
-        if (moveLength<0) {
+        if (moveLength<0 && that.nLastTh.index() !== jQuery(nTh).index() ) {
           that.nLastTh.width(that.nLastThOriginalWidth+Math.abs(moveLength));
         }
       }
@@ -462,7 +463,7 @@
    *  @type      String
    *  @default   As code
    */
-  ColResize.VERSION = "0.5";
+  ColResize.VERSION = "0.5.1";
   ColResize.prototype.VERSION = ColResize.VERSION;
 
 
