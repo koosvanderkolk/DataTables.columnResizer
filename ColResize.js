@@ -401,11 +401,14 @@
         if (moveLength != 0)
 
         /* resize the column header */
-        $(nTh).width(this.s.mouse.startWidth + moveLength);
+        var newWidth = this.s.mouse.startWidth + moveLength;
+        if (!that.s.dt.oInit.minColWidth || newWidth >= that.s.dt.oInit.minColWidth) {
+          $(nTh).width(newWidth);
 
-        /* also resize the last column header if the column width is decreased */
-        if (moveLength<0 && that.nLastTh.index() !== jQuery(nTh).index() ) {
-          that.nLastTh.width(that.nLastThOriginalWidth+Math.abs(moveLength));
+          /* also resize the last column header if the column width is decreased */
+          if (moveLength<0 && that.nLastTh.index() !== jQuery(nTh).index() ) {
+            that.nLastTh.width(that.nLastThOriginalWidth+Math.abs(moveLength));
+          }
         }
       }
     },
